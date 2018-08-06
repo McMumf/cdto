@@ -1,11 +1,11 @@
 {
-  "name": "goto",
+  "name": "cdto",
   "version": "1.0.0",
-  "bin": {
-    "goto": "index.js"
-  },
   "description": "A package to help navigate to projects via commandline easier",
   "main": "index.js",
+  "bin": {
+    "goto": "bin/cdto"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/mccaffreycarson/goto#readme",
   "dependencies": {
-    "hashmap": "^2.3.0"
+    "sequelize": "^4.38.0",
+    "sqlite3": "^4.0.2",
+    "yargs": "^12.0.1"
   }
 }
