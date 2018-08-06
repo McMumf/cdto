@@ -1,11 +1,12 @@
 'use strict';
 
+const hashmap = require('hashmap');
 const minimist = require('minimist');
-const fs = require('fs');
 
-var content = fs.readFileSync('paths.json');
-var paths = JSON.parse(content);
+// Create hashmap
+var projects = new hashmap();
 
+// Read Arguments
 let args = minimist(process.argv.slice(2), {
     alais: {
         a: 'add',
@@ -16,17 +17,12 @@ let args = minimist(process.argv.slice(2), {
     }
 });
 
-console.log("args:", args);
-
-console.log(args.a);
-
 if(args.a) {
     var newPath = {
-        name: args.name,
-        path: args.path
+        name: args.a,
+        path: process.cwd()
     }
-    console.log(newPath);
-    paths += newPath;
-    fs.writeFile("paths.json", paths);
+    projects.set(newPath.name, newPath.path);
+    console.log(projects.size);
 }
 

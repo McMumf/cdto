@@ -1,6 +1,9 @@
 {
   "name": "goto",
   "version": "1.0.0",
+  "bin": {
+    "goto": "index.js"
+  },
   "description": "A package to help navigate to projects via commandline easier",
   "main": "index.js",
   "scripts": {
@@ -17,6 +20,6 @@
   },
   "homepage": "https://github.com/mccaffreycarson/goto#readme",
   "dependencies": {
-    "yargs": "^12.0.1"
+    "hashmap": "^2.3.0"
   }
 }
