@@ -1,6 +1,8 @@
 'use strict';
 
+var shell = require('shelljs');
 var Sequelize = require("sequelize");
+
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -13,9 +15,7 @@ const sequelize = new Sequelize({
 const Project = sequelize.define('project', {
     name: Sequelize.STRING,
     path: Sequelize.STRING
-  });
-
-sequelize.sync();
+    });
 
 var addProject = function(name, path) {
     Project.create({
@@ -51,11 +51,29 @@ var listProjects = function() {
     });
 }
 
-/*var navigate = funtction(name) {
-
-}*/
+var navigate = function(name) {
+    Project.findOne({
+        where: {
+            name: name
+        }
+    }).then(project => {
+        console.log('navigating to ' + project.name);
+        shell.exec('open -a Terminal \"' + project.path + '\"');
+    });
+}
 
 var cli = function() {
+
+    var fs = require('fs');
+    var path = './projects.sqlite'
+
+    if (!fs.existsSync(path)) {
+        fs.openSync(path, 'w');
+        fs.closeSync(fs.openSync(path, 'w'));
+    }
+
+    sequelize.sync();
+
     var argv = require('yargs')
         .alias('a', 'Add Project Path')
         .alias('r', 'Remove Priject Path')
@@ -66,10 +84,10 @@ var cli = function() {
 
     var path = 'json';
     if (argv._[0]) {
-        console.log('Going to project ' + argv._[0]);
+        navigate(argv._[0]);
     } else if (argv.a) {
-        if(argv.a === true) {
-            console.log('Please provide a project name to add');
+        if(argv.a === true && argv.name && argv.path) {
+            addProject(argv.name, argv.path);
         } else {
             addProject(argv.a, process.cwd());
         }
