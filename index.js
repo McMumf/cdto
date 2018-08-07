@@ -40,7 +40,7 @@ var listProjects = function() {
     Project.findAll({
 
     }).then(projects => {
-        if(projects.length === 0) {
+        if(!projects) {
             console.log("No Current Projects!");
         } else {
             console.log("Projects");
@@ -57,8 +57,12 @@ var navigate = function(name) {
             name: name
         }
     }).then(project => {
-        console.log('navigating to ' + project.name);
-        shell.exec('open -a Terminal \"' + project.path + '\"');
+        if(!project) {
+            console.log("No Project Found");
+        } else {
+            console.log('navigating to ' + project.name);
+            shell.exec('open -a Terminal \"' + project.path + '\"');
+        }
     });
 }
 
