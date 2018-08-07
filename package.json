@@ -1,6 +1,6 @@
 {
   "name": "cdto",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A package to help navigate to projects via commandline easier",
   "main": "index.js",
   "bin": {
