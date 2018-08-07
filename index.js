@@ -1,8 +1,9 @@
 'use strict';
 
 var shell = require('shelljs');
-var Sequelize = require("sequelize");
-
+var Sequelize = require('sequelize');
+var os = require('os');
+var fs = require('fs');
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -16,6 +17,14 @@ const Project = sequelize.define('project', {
     name: Sequelize.STRING,
     path: Sequelize.STRING
     });
+
+var checkDB = function() {
+    var path = './projects.sqlite'
+    if (!fs.existsSync(path)) {
+        fs.openSync(path, 'w');
+        fs.closeSync(fs.openSync(path, 'w'));
+    }
+}
 
 var addProject = function(name, path) {
     Project.create({
@@ -61,28 +70,39 @@ var navigate = function(name) {
             console.log("No Project Found");
         } else {
             console.log('navigating to ' + project.name);
-            shell.exec('open -a Terminal \"' + project.path + '\"');
+            switch(os.platform()) {
+                case "darwin":
+                    shell.exec('open -a Terminal "' + project.path + '"');
+                    break;
+                case 'win32':
+                    shell.exec('start cmd /K "cd ' + project.name + '"');
+                    break;
+                case 'linux':
+                    console.log('Coming Soon!');
+                    //shell.exec('gnome-terminal ');
+                    break;
+                default:
+                    console.log('Operating System not Supported');
+                    break;
+            };
         }
     });
 }
 
 var cli = function() {
 
-    var fs = require('fs');
-    var path = './projects.sqlite'
-
-    if (!fs.existsSync(path)) {
-        fs.openSync(path, 'w');
-        fs.closeSync(fs.openSync(path, 'w'));
-    }
+    var pjson = require('./package.json');
 
     sequelize.sync();
+
+    checkDB();
 
     var argv = require('yargs')
         .alias('a', 'Add Project Path')
         .alias('r', 'Remove Priject Path')
         .alias('l', 'List Projects')
-        .alias('h', 'help')
+        .alias('v', 'Version')
+        .alias('h', 'Help')
         .help('h')
         .argv;
 
@@ -103,8 +123,10 @@ var cli = function() {
         }
     } else if (argv.l) {
         listProjects();
+    } else if (argv.v) {
+        console.log(pjson.version)
     } else {
-
+        console.log('Not a valid command');
     }
 }
 

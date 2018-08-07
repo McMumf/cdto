@@ -7,7 +7,8 @@
     "cdto": "bin/cdto"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "touch projects.sqlite"
   },
   "repository": {
     "type": "git",
