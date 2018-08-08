@@ -4,32 +4,76 @@ var shell = require('shelljs');
 var Sequelize = require('sequelize');
 var os = require('os');
 var fs = require('fs');
+require('dotenv').config();
 
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    // SQLite only
-    storage: './projects.sqlite',
-    logging: false,
-    operatorsAliases: false,
-});
+var sequelize;
+
+switch(os.platform()) {
+    case "darwin":
+        sequelize = new Sequelize({
+            dialect: 'sqlite',
+            // SQLite only
+            storage: process.env.LINUX_CDTO_DB,
+            logging: false,
+            operatorsAliases: false,
+        });
+        break;
+    case 'win32':
+        sequelize = new Sequelize({
+            dialect: 'sqlite',
+            // SQLite only
+            storage: process.env.WIN32_CDTO_DB,
+            logging: false,
+            operatorsAliases: false,
+        });
+        break;
+    case 'linux':
+        sequelize = new Sequelize({
+            dialect: 'sqlite',
+            // SQLite only
+            storage: process.env.LINUX_CDTO_DB,
+            logging: false,
+            operatorsAliases: false,
+        });
+        //shell.exec('gnome-terminal ');
+        break;
+    default:
+        console.log('Operating System not Supported');
+        break;
+};
 
 const Project = sequelize.define('project', {
     name: Sequelize.STRING,
     path: Sequelize.STRING
-    });
+});
 
 var checkDB = function() {
-    var path = './projects.sqlite'
-    if (!fs.existsSync(path)) {
-        fs.openSync(path, 'w');
-        fs.closeSync(fs.openSync(path, 'w'));
-    }
+    console.log('inside here ' + process.env.LINUX_CDTO_DB);
+    switch(os.platform()) {
+        case "linux":
+        case "darwin":
+            if (!fs.existsSync(process.env.LINUX_CDTO_DB)) {
+                fs.openSync(process.env.LINUX_CDTO_DB, 'w');
+                fs.closeSync(fs.openSync(process.env.LINUX_CDTO_DB.toString(), 'w'));
+            }
+            break;
+        case 'win32':
+            if (!fs.existsSync(process.env.WIN32_CDTO_DB)) {
+                fs.openSync(process.env.WIN32_CDTO_DB, 'w');
+                fs.closeSync(fs.openSync(process.env.WIN32_CDTO_DB, 'w'));
+            }
+            break;
+        default:
+            console.log('Operating System not Supported');
+            break;
+    };
+    sequelize.sync();
 }
 
-var addProject = function(name, path) {
+var addProject = function(name, projectPath) {
     Project.create({
         name: name,
-        path: path
+        path: projectPath
     }).then(project => {
         console.log(project.name + ' added at ' + project.path);
     });
@@ -93,8 +137,6 @@ var cli = function() {
 
     var pjson = require('./package.json');
 
-    sequelize.sync();
-
     checkDB();
 
     var argv = require('yargs')
@@ -106,7 +148,6 @@ var cli = function() {
         .help('h')
         .argv;
 
-    var path = 'json';
     if (argv._[0]) {
         navigate(argv._[0]);
     } else if (argv.a) {
