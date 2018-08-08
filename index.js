@@ -52,14 +52,18 @@ var checkDB = function() {
         case "linux":
         case "darwin":
             if (!fs.existsSync(process.env.LINUX_CDTO_DB)) {
-                fs.openSync(process.env.LINUX_CDTO_DB, 'w');
-                fs.closeSync(fs.openSync(process.env.LINUX_CDTO_DB.toString(), 'w'));
+                fs.open(process.env.LINUX_CDTO_DB, 'w', (err, fd) => {
+                    if (err) throw err;
+                    fs.close(fd, err => { if (err)throw err; });
+                });
             }
             break;
         case 'win32':
             if (!fs.existsSync(process.env.WIN32_CDTO_DB)) {
-                fs.openSync(process.env.WIN32_CDTO_DB, 'w');
-                fs.closeSync(fs.openSync(process.env.WIN32_CDTO_DB, 'w'));
+                fs.open(process.env.LINUX_CDTO_DB, 'w', (err, fd) => {
+                    if (err) throw err;
+                    fs.close(fd, err => { if (err)throw err; });
+                });
             }
             break;
         default:
