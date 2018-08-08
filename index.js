@@ -52,7 +52,7 @@ var checkDB = function() {
         case "linux":
         case "darwin":
             if (!fs.existsSync(process.env.LINUX_CDTO_DB)) {
-                fs.open(process.env.LINUX_CDTO_DB, 'w', (err, fd) => {
+                fs.open("" + process.env.LINUX_CDTO_DB, 'w', (err, fd) => {
                     if (err) throw err;
                     fs.close(fd, err => { if (err)throw err; });
                 });
@@ -60,7 +60,7 @@ var checkDB = function() {
             break;
         case 'win32':
             if (!fs.existsSync(process.env.WIN32_CDTO_DB)) {
-                fs.open(process.env.LINUX_CDTO_DB, 'w', (err, fd) => {
+                fs.open("" + process.env.LINUX_CDTO_DB, 'w', (err, fd) => {
                     if (err) throw err;
                     fs.close(fd, err => { if (err)throw err; });
                 });
