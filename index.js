@@ -48,7 +48,6 @@ const Project = sequelize.define('project', {
 });
 
 var checkDB = function() {
-    console.log('inside here ' + process.env.LINUX_CDTO_DB);
     switch(os.platform()) {
         case "linux":
         case "darwin":
