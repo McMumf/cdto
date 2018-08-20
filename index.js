@@ -9,11 +9,12 @@ require('dotenv').config();
 var sequelize;
 
 switch(os.platform()) {
+    case 'linux':
     case "darwin":
         sequelize = new Sequelize({
             dialect: 'sqlite',
             // SQLite only
-            storage: process.env.LINUX_CDTO_DB,
+            storage: process.env.HOME + '/projects.sqlite',
             logging: false,
             operatorsAliases: false,
         });
@@ -22,20 +23,10 @@ switch(os.platform()) {
         sequelize = new Sequelize({
             dialect: 'sqlite',
             // SQLite only
-            storage: process.env.WIN32_CDTO_DB,
+            storage: process.env.HOME,
             logging: false,
             operatorsAliases: false,
         });
-        break;
-    case 'linux':
-        sequelize = new Sequelize({
-            dialect: 'sqlite',
-            // SQLite only
-            storage: process.env.LINUX_CDTO_DB,
-            logging: false,
-            operatorsAliases: false,
-        });
-        //shell.exec('gnome-terminal ');
         break;
     default:
         console.log('Operating System not Supported');
@@ -51,16 +42,16 @@ var checkDB = function() {
     switch(os.platform()) {
         case "linux":
         case "darwin":
-            if (!fs.existsSync(process.env.LINUX_CDTO_DB)) {
-                fs.open("" + process.env.LINUX_CDTO_DB, 'w', (err, fd) => {
+            if (!fs.existsSync(process.env.HOME + '/projects.sqlite')) {
+                fs.open("" + process.env.HOME + '/projects.sqlite', 'w', (err, fd) => {
                     if (err) throw err;
                     fs.close(fd, err => { if (err)throw err; });
                 });
             }
             break;
         case 'win32':
-            if (!fs.existsSync(process.env.WIN32_CDTO_DB)) {
-                fs.open("" + process.env.LINUX_CDTO_DB, 'w', (err, fd) => {
+            if (!fs.existsSync(process.env.HOME + '/projects.sqlite')) {
+                fs.open("" + process.env.HOME + '/projects.sqlite', 'w', (err, fd) => {
                     if (err) throw err;
                     fs.close(fd, err => { if (err)throw err; });
                 });
