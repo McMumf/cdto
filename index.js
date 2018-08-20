@@ -3,6 +3,7 @@
 var shell = require('shelljs');
 var Sequelize = require('sequelize');
 var os = require('os');
+var homeDIR = os.homedir();
 var fs = require('fs');
 require('dotenv').config();
 
@@ -14,7 +15,7 @@ switch(os.platform()) {
         sequelize = new Sequelize({
             dialect: 'sqlite',
             // SQLite only
-            storage: process.env.HOME + '/projects.sqlite',
+            storage: homeDIR + '/projects.sqlite',
             logging: false,
             operatorsAliases: false,
         });
@@ -23,7 +24,7 @@ switch(os.platform()) {
         sequelize = new Sequelize({
             dialect: 'sqlite',
             // SQLite only
-            storage: process.env.HOME,
+            storage: homeDIR + '/projects.sqlite',
             logging: false,
             operatorsAliases: false,
         });
@@ -42,16 +43,16 @@ var checkDB = function() {
     switch(os.platform()) {
         case "linux":
         case "darwin":
-            if (!fs.existsSync(process.env.HOME + '/projects.sqlite')) {
-                fs.open("" + process.env.HOME + '/projects.sqlite', 'w', (err, fd) => {
+            if (!fs.existsSync(homeDIR + '/projects.sqlite')) {
+                fs.open("" + homeDIR + '/projects.sqlite', 'w', (err, fd) => {
                     if (err) throw err;
                     fs.close(fd, err => { if (err)throw err; });
                 });
             }
             break;
         case 'win32':
-            if (!fs.existsSync(process.env.HOME + '/projects.sqlite')) {
-                fs.open("" + process.env.HOME + '/projects.sqlite', 'w', (err, fd) => {
+            if (!fs.existsSync(homeDIR+ '/projects.sqlite')) {
+                fs.open("" + homeDIR + '/projects.sqlite', 'w', (err, fd) => {
                     if (err) throw err;
                     fs.close(fd, err => { if (err)throw err; });
                 });

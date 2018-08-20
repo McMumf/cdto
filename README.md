@@ -12,23 +12,23 @@ A npm package to make navigating to projects in the command line easier
 
 ## Example
 
-```shell
-cdto -a --name=projectname --name=*pathtoproject*
-```
-
-Allows user to specify a project and its path.
+Basic use case adds the current directory to the proect name
 
 ```shell
 cdto -a projectname
 ```
 
-Adds project with projectname in current path.
+Allows user to specify a project and its path.
+
+```shell
+cdto -a --name=projectname --name=*pathtoproject*
+```
+
+Removes a project.
 
 ```shell
 cdto -r projectname
 ```
-
-Removes a project.
 
 ## TODO
 
